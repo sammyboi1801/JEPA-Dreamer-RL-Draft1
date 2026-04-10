@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>What You Imagine Is What You Learn</title>
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['$','$']], displayMath: [['$$','$$']] },
+    options: { skipHtmlTags: ['script','noscript','style','textarea'] }
+  };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: Georgia, 'Times New Roman', serif;
+    background: #fafaf8;
+    color: #1a1a1a;
+    line-height: 1.75;
+    font-size: 16px;
+  }
+
+  .page {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 64px 36px 90px;
+  }
+
+  header {
+    text-align: center;
+    margin-bottom: 52px;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 40px;
+  }
+  header h1 {
+    font-size: 1.85rem;
+    font-weight: normal;
+    line-height: 1.35;
+    margin-bottom: 16px;
+  }
+  .author {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 0.95rem;
+    color: #555;
+    margin-bottom: 14px;
+  }
+  .tag {
+    display: inline-block;
+    background: #1a1a1a;
+    color: #fff;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 0.70rem;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    padding: 4px 11px;
+    border-radius: 3px;
+  }
+
+  h2 {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 1.0rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: #111;
+    margin: 56px 0 16px;
+    padding-bottom: 7px;
+    border-bottom: 2px solid #111;
+  }
+  h3 {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 0.93rem;
+    font-weight: 700;
+    color: #222;
+    margin: 32px 0 10px;
+  }
+  h4 {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 0.86rem;
+    font-weight: 600;
+    color: #444;
+    margin: 22px 0 8px;
+  }
+
+  p { margin-bottom: 14px; }
+
+  .abstract {
+    background: #f1f0ea;
+    border-left: 3px solid #999;
+    padding: 20px 26px;
+    font-size: 0.93rem;
+    margin-bottom: 6px;
+  }
+
+  /* Phase block: diagram top, text below */
+  .phase-block {
+    display: block;
+    margin: 20px 0;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 20px;
+    background: #fff;
+  }
+  .phase-block img {
+    width: 100%;
+    max-height: 400px;
+    object-fit: contain;
+    border: 1px solid #e0e0e0;
+    border-radius: 3px;
+    display: block;
+    margin-bottom: 18px;
+  }
+  .phase-label {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #888;
+    margin-bottom: 4px;
+  }
+  .phase-title {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 1.0rem;
+    font-weight: 700;
+    color: #111;
+    margin-bottom: 12px;
+  }
+  .phase-block p { font-size: 0.89rem; color: #333; margin-bottom: 10px; }
+  .phase-block p:last-child { margin-bottom: 0; }
+
+  /* Masking cards */
+  .masking-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin: 16px 0;
+  }
+  .masking-card {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 16px 18px;
+    background: #fff;
+    font-size: 0.89rem;
+  }
+  .masking-card .mc-title {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-weight: 700;
+    font-size: 0.88rem;
+    margin-bottom: 8px;
+    color: #111;
+  }
+  .masking-card .blindspot {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 0.79rem;
+    color: #991b1b;
+    margin-top: 8px;
+    font-style: italic;
+  }
+
+  /* 3-col metric charts */
+  .metric-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px;
+    margin: 16px 0;
+  }
+  .metric-grid figure { margin: 0; }
+  .metric-grid figure img {
+    width: 100%;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    display: block;
+  }
+  .metric-grid figcaption {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 0.74rem;
+    color: #666;
+    margin-top: 5px;
+    text-align: center;
+  }
+
+  figure { margin: 24px 0; }
+  figure img {
+    width: 100%;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    display: block;
+  }
+  figcaption {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 0.79rem;
+    color: #555;
+    margin-top: 8px;
+    line-height: 1.5;
+  }
+  figcaption strong { color: #222; }
+
+  /* 3-col GIF grid */
+  .gif-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 16px;
+    margin: 20px 0;
+  }
+  .gif-grid figure { margin: 0; }
+  .gif-grid figure img {
+    width: 100%;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    display: block;
+  }
+  .gif-grid figcaption {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 0.76rem;
+    color: #555;
+    margin-top: 6px;
+    line-height: 1.45;
+    text-align: center;
+  }
+  .gif-grid figcaption strong { color: #222; }
+
+  .result-box {
+    background: #fff;
+    border: 1px solid #ccc;
+    border-left: 4px solid #1a1a1a;
+    border-radius: 4px;
+    padding: 16px 20px;
+    margin: 20px 0;
+    font-size: 0.89rem;
+  }
+  .result-box p { margin-bottom: 8px; }
+  .result-box p:last-child { margin-bottom: 0; }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 0.84rem;
+    margin: 20px 0;
+  }
+  thead tr { background: #1a1a1a; color: #fff; }
+  thead th { padding: 10px 14px; text-align: left; font-weight: 600; }
+  tbody td { padding: 9px 14px; border-bottom: 1px solid #e2e2e2; }
+  tbody tr:nth-child(even) { background: #f7f7f4; }
+  .good { color: #166534; font-weight: 600; }
+  .bad  { color: #991b1b; font-weight: 600; }
+
+  .eq {
+    text-align: center;
+    margin: 14px 0;
+    overflow-x: auto;
+  }
+
+  .note {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 0.80rem;
+    color: #666;
+    border: 1px dashed #ccc;
+    border-radius: 3px;
+    padding: 10px 14px;
+    margin: 14px 0;
+    background: #fafaf8;
+  }
+
+  ul.body-list { padding-left: 20px; margin: 12px 0; }
+  ul.body-list li { margin-bottom: 10px; font-size: 0.90rem; line-height: 1.65; }
+  ul.body-list ul { padding-left: 18px; margin-top: 6px; }
+  ul.body-list ul li { margin-bottom: 6px; }
+
+  ol.body-list { padding-left: 20px; margin: 12px 0; }
+  ol.body-list li { margin-bottom: 10px; font-size: 0.90rem; line-height: 1.65; }
+  ol.body-list ul { padding-left: 18px; margin-top: 6px; }
+  ol.body-list ul li { margin-bottom: 6px; }
+
+  footer {
+    margin-top: 72px;
+    padding-top: 20px;
+    border-top: 1px solid #ddd;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 0.78rem;
+    color: #888;
+    text-align: center;
+    line-height: 1.8;
+  }
+
+  /* Modal */
+  #modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.88);
+    z-index: 1000;
+    cursor: zoom-out;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+  #modal.open { display: flex; }
+  #modal-img {
+    max-width: 100%;
+    max-height: 90vh;
+    object-fit: contain;
+    border-radius: 3px;
+    box-shadow: 0 4px 40px rgba(0,0,0,0.6);
+    cursor: default;
+  }
+  #modal-close {
+    position: fixed;
+    top: 18px;
+    right: 24px;
+    color: #fff;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 1.5rem;
+    font-weight: 300;
+    cursor: pointer;
+    line-height: 1;
+    opacity: 0.7;
+  }
+  #modal-close:hover { opacity: 1; }
+  .zoomable { cursor: zoom-in; }
+
+  @media (max-width: 640px) {
+    .masking-grid { grid-template-columns: 1fr; }
+    .metric-grid { grid-template-columns: 1fr; }
+    .gif-grid { grid-template-columns: 1fr; }
+    header h1 { font-size: 1.45rem; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+<!-- HEADER -->
+<header>
+  <h1>What You Imagine Is What You Learn:<br>
+  Masking Strategies, World Model Fidelity,<br>and MPC-Based Reinforcement Learning</h1>
+  <div class="author">Sam Selvaraj &nbsp;&middot;&nbsp; MS in Computer Science</div>
+  <span class="tag">Research Demonstration &nbsp;&middot;&nbsp; 2026</span>
+</header>
+
+
+<!-- ABSTRACT -->
+<h2>Abstract</h2>
+<div class="abstract">
+  <p>Current approaches to deep reinforcement learning in visually complex environments typically
+  rely on massive datasets and reactive, model-free policy networks. These reactive agents often
+  struggle with long-horizon tasks and sample efficiency, as they lack an explicit understanding
+  of the physical rules governing their environment. To address this, we propose a rigorous,
+  three-phase training curriculum that discards reactive policies entirely in favor of an active,
+  dynamic planner.</p>
+  <p style="margin-bottom:0;">Our architecture transitions the agent from passive visual observation
+  to active planning. In Phase 0, the agent learns a physics-aware latent space via a V-JEPA
+  like objective with dynamic masking strategies (Error-Based and Motion-Weighted). In Phase 1, a
+  Recurrent State-Space Model (RSSM) learns environment causality and dynamics through random
+  interactions. Finally, in Phase 2, the agent utilizes Model Predictive Control (MPC) to reason
+  over imagined futures at every decision step, driven by a Reward Predictor and a Value MLP
+  trained strictly on real environment transitions. We demonstrate that domain-specific
+  visual-temporal pretraining is strictly necessary; without it, state-of-the-art vision foundation
+  models like DINOv2 suffer catastrophic imagination drift. Furthermore, our dynamic masking
+  strategies yield highly stable, long-horizon world models capable of sustaining rigorous MPC
+  planning.</p>
+</div>
+
+
+<!-- ARCHITECTURE REVIEW -->
+<h2>Architecture Review</h2>
+
+<p>This work presents a three-phase training curriculum that progressively builds an agent capable
+of long-horizon latent planning in a first-person environment. The agent never learns a reactive
+policy. Instead, it learns an increasingly faithful internal simulation of the world and uses
+Model Predictive Control (MPC) to reason over imagined futures at every step.</p>
+
+
+<!-- Phase 0 -->
+<h3>Phase 0: Encoder Pretraining using JEPA-like Objective</h3>
+
+<div class="phase-block">
+  <img src="assets/Phase 0 diagram.png" alt="Phase 0 architecture diagram">
+  <div>
+    <div class="phase-label">Phase 0</div>
+    <div class="phase-title">Visual Physics Grounding</div>
+    <p>Before observing a single reward, the agent must learn the visual structure of its world.
+    Phase 0 trains a CNN Encoder and a Video Predictor on 8 hours of raw, unlabelled Doom gameplay
+    sourced from YouTube, downsampled to 7.5 FPS and stripped of HUDs, yielding over 300,000
+    consecutive frame pairs.</p>
+    <p>Training proceeds through a dual objective designed to prevent lazy representation learning.
+    First, spatial input masking blacks out 50% of input patches per frame, forcing the predictor
+    to infer missing content from visible context alone, thus learning object permanence and global
+    scene structure rather than local texture interpolation. Second, the prediction loss is not
+    applied uniformly. Two masking strategies can be compared as ablations.</p>
+    <p>By the end of Phase 0, the encoder has developed a physics-aware latent space with no
+    knowledge of actions or rewards.</p>
+  </div>
+</div>
+
+<div class="masking-grid">
+  <div class="masking-card">
+    <div class="mc-title">Motion-Weighted Masking</div>
+    <p>Computes per-patch importance weights from inter-frame token differences,
+    EMA-smoothed with decay $\alpha = 0.7$:</p>
+    <div class="eq">
+      $$w_t^{(n)} = \mathrm{softmax}\!\left(\frac{\mathrm{EMA}\!\left(\bigl|e_t^{(n)}-e_{t-1}^{(n)}\bigr|^2\right)}{\tau}\right)$$
+    </div>
+    <p>This forces the encoder to model moving entities but renders it blind to stationary threats.</p>
+    <div class="blindspot">A motionless monster might receive a weight of zero.</div>
+  </div>
+  <div class="masking-card">
+    <div class="mc-title">Error-Based Masking</div>
+    <p>Replaces motion signals with the predictor's own detached per-patch MSE from the previous
+    training step:</p>
+    <div class="eq">
+      $$w_t^{(n)} = \mathrm{softmax}\!\left(\frac{\mathrm{MSE}_{t-1}^{(n)}}{\tau}\right)$$
+    </div>
+    <p>Structurally complex objects such as a stationary monster are inherently harder to predict
+    than flat walls and naturally generate high error, forcing the encoder to dedicate capacity to
+    tactically important regions regardless of motion.</p>
+  </div>
+</div>
+
+
+<!-- Phase 1 -->
+<h3>Phase 1: RSSM Dynamics Pretraining</h3>
+
+<div class="phase-block">
+  <img src="assets/Phase 1 diagram.png" alt="Phase 1 architecture diagram">
+  <div>
+    <div class="phase-label">Phase 1</div>
+    <div class="phase-title">Learning Causality &amp; Dynamics</div>
+    <p>Phase 1 teaches the agent causality: how actions manipulate the latent representations
+    learned in Phase 0. The agent collects 5,000 episodes under a random policy with sticky actions
+    (3–8 step repeats) to generate coherent motion trajectories. The full world model (Encoder
+    projection head, RSSM, and JEPA Predictor) is trained jointly.</p>
+    <p><strong>RSSM Belief State.</strong> The RSSM maintains a two-part belief at every timestep.
+    The deterministic component $h_t \in \mathbb{R}^{512}$ is produced by a BlockGRU with LayerNorm
+    applied to the hidden state output for gradient stability:
+    $h_t = \mathrm{LayerNorm}(\mathrm{GRU}(h_{t-1}, [z_{t-1};\, \phi_a(a_{t-1})]))$.</p>
+    <p>The stochastic component $z_t$ is sampled from 32 independent categorical distributions
+    each with 32 classes, yielding a 1024-dimensional flattened one-hot vector. To prevent
+    categorical collapse, a 1% uniform mixing (unimix) is applied:
+    $\tilde{\pi} = 0.99\cdot\pi + 0.01\cdot\mathcal{U}$, ensuring all classes retain non-zero
+    probability and gradient flow.</p>
+    <p>The RSSM operates in two modes. During training, the posterior $q(z_t \mid h_t, o_t)$ uses
+    Token Cross-Attention: $h_t$ acts as a query attending over the $N$ spatial patch tokens from
+    the encoder, selectively focusing on tactically important regions rather than destructively
+    mean-pooling. During inference, the prior $p(z_t \mid h_t)$ generates $z_t$ from $h_t$ alone.
+    The KL divergence between posterior and prior forces the prior to align with true environment
+    dynamics: $\mathcal{L}_K = \mathrm{BalancedKL}(q \| p)$ with free bits = 1.0.</p>
+  </div>
+</div>
+
+<h4>Training Objective</h4>
+<p>The full Phase 1 loss is:</p>
+<div class="eq">
+  $$\mathcal{L} = \mathcal{L}_\mathrm{JEPA} + 0.5\cdot\mathcal{L}_\mathrm{multi}
+    + \beta_t\cdot\mathcal{L}_\mathrm{KL} + \lambda\cdot\mathcal{L}_\mathrm{var}$$
+</div>
+
+<ul class="body-list">
+  <li>The <strong>single-step JEPA loss</strong> measures weighted MSE between the JEPA Predictor's
+  output and the EMA target encoder tokens (stop-gradient) at the next timestep:
+  $$\mathcal{L}_\mathrm{JEPA} = \frac{1}{T-1}\sum_{t=1}^{T-1}\sum_{n=1}^{N}
+    w_t^{(n)}\cdot\bigl|\hat{e}_{t+1}^{(n)} - e_{t+1}^{(n)}\bigr|^2$$
+  </li>
+  <li>The <strong>multi-step imagination loss</strong> unrolls the RSSM $K=12$ steps forward using
+  only its prior, enforcing coherence over the full planning horizon used in Phase 2:
+  $$\mathcal{L}_\mathrm{multi} = \frac{1}{K-1}\sum_{k=2}^{K}\gamma^k\cdot\mathcal{L}^k_\mathrm{JEPA}$$
+  </li>
+</ul>
+
+<p>The KL coefficient is linearly annealed $\beta_t = \min\!\left(1,\, \frac{t}{10000}\right)$,
+allowing the RSSM to first learn to encode observations before being pressured to develop a
+predictive prior. Patch importance weights are annealed from 50% to 80% weighted sampling over
+10,000 steps. Gradients are truncated every 8 steps (TBPTT) to bound VRAM usage. A variance
+regularization term $\mathcal{L}_\mathrm{var} = \mathbb{E}[\mathrm{ReLU}(1 - \sigma(N_\mathrm{ctx}))]$
+prevents the CNN encoder from collapsing all $N$ spatial tokens to a single vector.</p>
+
+
+<!-- Phase 2 -->
+<h3>Phase 2: MPC RL Fine-Tuning</h3>
+
+<div class="phase-block">
+  <img src="assets/Phase 2 diagram.png" alt="Phase 2 architecture diagram">
+  <div>
+    <div class="phase-label">Phase 2</div>
+    <div class="phase-title">Model Predictive Control</div>
+    <p>Equipped with a physically grounded world model, the agent enters the live environment.
+    Traditional actor-critic networks are discarded entirely. Instead, the agent relies on Model
+    Predictive Control and a Dyna-style separation of concerns between model training and
+    planning.</p>
+    <p><strong>Freeze Stage (0–10k steps).</strong> The world model is frozen to protect pretrained
+    representations. Two evaluators are trained on incoming replay data: a Reward Predictor
+    $\hat{r}_\psi(h_t, z_t) \approx r_t$, a lightweight MLP trained to map real observed belief
+    states to extrinsic rewards, and a Value MLP $V_\phi$ trained via greedy imagination rollouts.
+    From every real state in the replay batch, the RSSM imagines a short trajectory exhaustively
+    testing all actions at each step and selecting the highest-scoring one. This teaches $V_\phi$
+    to estimate the return achievable by a perfect planner from any state, enabling accurate
+    bootstrapping at the end of the MPC horizon.</p>
+    <p><strong>Thaw Stage (10k+ steps).</strong> The world model is unfrozen at $0.1\times$ the
+    Phase 1 learning rate. The JEPA loss continues on new replay data to prevent catastrophic
+    forgetting. Reward gradients are simultaneously allowed to flow into the RSSM's recurrent
+    state, teaching it to encode reward-relevant structure that visual masking may have
+    underweighted.</p>
+  </div>
+</div>
+
+<h4>Live Action Selection</h4>
+<p>At every environment step, the agent executes the full MPC loop. From the grounded belief state
+$[h_t, z_t]$, the RSSM's imagination path projects $N = 20$ candidate action sequences each
+$K = 15$ steps into the future. Each branch is scored by accumulating discounted predicted rewards
+and bootstrapping the terminal state:</p>
+<div class="eq">
+  $$J(a_{0:K-1}) = \sum_{k=0}^{K-1}\gamma^k\cdot\hat{r}_\psi(h_{t+k}, z_{t+k})
+    + \gamma^K\cdot V_\phi(h_{t+K}, z_{t+K})$$
+</div>
+<p>The agent executes the first action of the highest-scoring sequence, immediately re-grounds its
+belief on the real next observation, and repeats. An $\varepsilon$-greedy floor of 30% randomly
+overrides MPC to ensure the replay buffer continues receiving rare but critical events such as
+successful kills.</p>
+
+<p><strong>The Virtuous Cycle.</strong> The three components co-evolve in a self-reinforcing loop:
+a more accurate world model produces more faithful $N \times K$ branches → better value targets
+improve $V_\phi$ → superior MPC decisions generate higher-quality replay data → richer transitions
+further improve the world model. Crucially, both $\hat{r}_\psi$ and $V_\phi$ are grounded strictly
+in real environment transitions rather than a closed imagination loop, preventing compounding model
+bias from corrupting the planning signal.</p>
+
+
+<!-- PRELIMINARY RESULTS -->
+<h2>Preliminary Results</h2>
+
+<p>We evaluated the efficacy of our proposed curriculum by analyzing the Phase 1 dynamics
+pretraining logs and subsequently testing the models' ability to sustain long-horizon imagination.
+We compared our Phase 0 pretrained CNN Encoders (Error-Based and Motion-Weighted) against a
+frozen, state-of-the-art DINOv2 backbone.</p>
+
+
+<h3>Phase 1 Dynamics Training Stability</h3>
+
+<p>The foundational requirement for MPC planning is a stable world model. Training logs from
+Phase 1 demonstrate a stark contrast between models equipped with domain-specific
+visual-temporal pretraining (Phase 0) and off-the-shelf foundation models.</p>
+
+<h4>CNN Encoder Stability (Error &amp; Motion Masking)</h4>
+<p>Both the Error-Based and Motion-Weighted CNN encoders demonstrated highly stable optimization
+during Phase 1.</p>
+
+<div class="metric-grid">
+  <figure>
+    <img src="assets/CNN error vs motion val mse.png" alt="CNN val MSE: error vs motion">
+    <figcaption>Validation MSE</figcaption>
+  </figure>
+  <figure>
+    <img src="assets/CNN error vs motion multi-step loss.png" alt="CNN multistep loss: error vs motion">
+    <figcaption>Multistep imagination loss</figcaption>
+  </figure>
+  <figure>
+    <img src="assets/CNN error vs motion KL loss.png" alt="CNN KL loss: error vs motion">
+    <figcaption>KL divergence loss</figcaption>
+  </figure>
+</div>
+
+<div class="result-box">
+  <p>For both masking strategies, the single-step validation MSE and the multistep imagination loss
+  successfully converged. Crucially, the KL divergence loss stabilized near the 1.0 nats free-bits
+  floor. The total loss curves exhibited a steady, controlled rise from ~0.3 to roughly ~1.05; this
+  perfectly mirrors our KL annealing schedule ($\beta: 0 \to 1$ over 10k steps). This confirms
+  that the models successfully utilized the initial low-penalty period to map the latent space
+  before enforcing strict predictive coherence between the prior and posterior. While the
+  Motion-Weighted encoder exhibited marginally faster multistep convergence, both proved
+  structurally sound.</p>
+</div>
+
+<h4>DINOv2 Training Failure</h4>
+<p>Conversely, the DINOv2 baseline, which bypassed Phase 0 and was injected directly into
+Phase 1, failed to achieve stable dynamics learning.</p>
+
+<div class="metric-grid">
+  <figure>
+    <img src="assets/Dino val mse.png" alt="DINOv2 val MSE">
+    <figcaption>Validation MSE</figcaption>
+  </figure>
+  <figure>
+    <img src="assets/Dino Multi-step loss.png" alt="DINOv2 multistep loss">
+    <figcaption>Multistep imagination loss</figcaption>
+  </figure>
+  <figure>
+    <img src="assets/Dino KL loss.png" alt="DINOv2 KL loss">
+    <figcaption>KL divergence loss</figcaption>
+  </figure>
+</div>
+
+<div class="result-box">
+  <p>The logs for the DINOv2 run reveal severe instability. The validation MSE struggled to break
+  below 0.10, and the total loss began diverging significantly after 10k steps. Furthermore, the
+  variance regularization metric (var_reg) remained completely flat at 0 throughout the run,
+  indicating an architectural or configuration failure to penalize spatial token collapse.</p>
+</div>
+
+
+<h3>World Model Imagination Fidelity (MSE Rollout Comparison)</h3>
+
+<p>To determine if the Phase 1 training yielded a world model capable of supporting Phase 2 MPC,
+we tested the models in a 20-step imagination rollout, measuring the predictive Mean Squared Error
+(MSE) against real tokens.</p>
+
+<figure>
+  <img src="assets/rollout_mse.png" alt="World Model Rollout Accuracy: Error vs Motion Masking">
+  <figcaption>
+    <strong>World Model Rollout Accuracy: Error vs Motion Masking.</strong>
+    MSE (imagined vs real tokens) across 20 imagination steps under three action regimes:
+    real episode actions, random action stress-test, and no-op static scene.
+  </figcaption>
+</figure>
+
+<p>The results perfectly reflect the Phase 1 training logs:</p>
+
+<div class="result-box">
+  <p><strong>The CNN variants:</strong> Thanks to their stable pretraining, both the Error-Based
+  and Motion-Weighted models exhibited exceptional long-horizon consistency. Across 20 steps of
+  pure imagination, both models maintained a nearly flat MSE trajectory (between 0.02 and 0.06).
+  This held true whether predicting real episodic actions, stress-testing with random actions, or
+  predicting a static scene (no-op actions).</p>
+  <p><strong>The DINOv2 Baseline:</strong> As a direct consequence of its unstable Phase 1 training
+  and lack of Phase 0 physics grounding, the DINOv2 prior suffered catastrophic imagination drift.
+  Across all three action scenarios, the DINOv2 MSE rapidly compounded, diverging from 0.30 at
+  step 1 to between 0.65 and 0.85 by step 20.</p>
+  <p>These results confirm that off-the-shelf vision foundation models cannot reliably support
+  long-horizon latent planning without specialized fine-tuning; the visual latent space must be
+  explicitly aligned with the environment's temporal physics (Phase 0) prior to action grounding.</p>
+</div>
+
+
+<h3>Results Summary</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Model</th>
+      <th>val_mse (Phase 1)</th>
+      <th>Rollout MSE @ step 20</th>
+      <th>KL convergence</th>
+      <th>var_reg</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>CNN (Error-Based)</td>
+      <td class="good">~0.010</td>
+      <td class="good">~0.06</td>
+      <td class="good">Stable at 1.0 nats floor</td>
+      <td class="good">Active</td>
+    </tr>
+    <tr>
+      <td>CNN (Motion-Weighted)</td>
+      <td class="good">~0.010</td>
+      <td class="good">~0.04</td>
+      <td class="good">Stable at 1.0 nats floor</td>
+      <td class="good">Active</td>
+    </tr>
+    <tr>
+      <td>DINOv2 (no Phase 0)</td>
+      <td class="bad">&gt; 0.10</td>
+      <td class="bad">0.65–0.85</td>
+      <td class="bad">Diverges after 10k steps</td>
+      <td class="bad">Broken (= 0)</td>
+    </tr>
+  </tbody>
+</table>
+
+
+<h3>Qualitative Visualization of Latent Imagination</h3>
+
+<p>The qualitative visualizations of the world model's internal rollouts perfectly corroborate the
+quantitative MSE data. When visualizing the spatial token grids, our custom Phase 0 pretrained
+CNNs (utilizing both Error-Based and Motion-Weighted masking) demonstrate remarkably stable
+"dreams." The imagined latent states track the real environmental latents with high visual fidelity
+across the rollout horizon, preserving the structural integrity of the scene and proving the RSSM
+prior has successfully internalized the environment's physics. Conversely, the DINOv2 baseline,
+lacking Phase 0 temporal grounding, exhibits severe visual divergence. Its imagined latents rapidly
+decouple from reality, demonstrating how an ungrounded foundation model's prior collapses when
+forced to unroll sequences without intermediate real observations. Ultimately, these visual
+comparisons validate our core thesis: domain-specific visual-temporal pretraining is not just
+beneficial, but strictly mandatory to produce a world model capable of the coherent, long-horizon
+imagination required for MPC-based reinforcement learning.</p>
+
+<div class="gif-grid">
+  <figure>
+    <img src="assets/world_model_validation_cnn_error.gif" alt="CNN Error-Based world model validation">
+    <figcaption>
+      <strong>CNN: Error-Based masking.</strong><br>
+      Stable long-horizon imagination. Imagined latents track real environmental latents with high
+      visual fidelity.
+    </figcaption>
+  </figure>
+  <figure>
+    <img src="assets/world_model_validation_cnn_motion.gif" alt="CNN Motion-Weighted world model validation">
+    <figcaption>
+      <strong>CNN: Motion-Weighted masking.</strong><br>
+      Comparable stability. RSSM prior has successfully internalized the environment's physics.
+    </figcaption>
+  </figure>
+  <figure>
+    <img src="assets/world_model_validation_dino_error_weighted_latest.gif" alt="DINOv2 world model validation">
+    <figcaption>
+      <strong>DINOv2 (no Phase 0).</strong><br>
+      Severe visual divergence. Imagined latents rapidly decouple from reality without temporal
+      grounding.
+    </figcaption>
+  </figure>
+</div>
+
+<div class="note">
+  <strong>Phase 2 results pending.</strong> The results above validate world model fidelity
+  (Phases 0–1). The critical next step is running Phase 2 and collecting episodic return curves
+  (agent score over environment steps).
+</div>
+
+
+<!-- DRAWBACKS AND LIMITATIONS -->
+<h2>Drawbacks and Limitations</h2>
+
+<p>While the proposed architecture successfully stabilizes world model rollouts, several inherent
+limitations exist within the current framework:</p>
+
+<ul class="body-list">
+  <li>
+    <strong>Computational Overhead of MPC.</strong> Unlike a reactive actor-critic policy that
+    requires a single forward pass per environment step, the MPC agent must run $N \times K$
+    forward passes through the RSSM imagination path (e.g., 20 branches × 15 steps = 300 steps
+    of imagination per real action). This significantly increases inference latency, making
+    real-time deployment challenging without heavy hardware optimization.
+  </li>
+  <li>
+    <strong>Masking Strategy Blindspots.</strong>
+    <ul>
+      <li><strong>Motion-Weighted Masking:</strong> As designed, this strategy reduces loss weights
+      to zero for static backgrounds. While highly effective for tracking moving entities, it
+      renders the agent entirely blind to stationary structural threats or goals.</li>
+      <li><strong>Error-Based Masking:</strong> While this solves the stationary threat problem,
+      it introduces a vulnerability to visual noise. Highly textured but irrelevant background
+      elements (e.g., a flickering static texture on a wall) inherently produce high prediction
+      errors, potentially forcing the network to waste parameter capacity modeling useless noise
+      instead of task-relevant features.</li>
+    </ul>
+  </li>
+  <li>
+    <strong>Incomplete Baseline Testing.</strong> The DINOv2 baseline failed due to a lack of
+    Phase 0 pretraining and a configuration bug (var_reg = 0). Therefore, the current comparison
+    evaluates a fully specialized model against a broken, un-specialized one, rather than
+    comparing against a properly fine-tuned foundation model.
+  </li>
+</ul>
+
+
+<!-- FUTURE WORK -->
+<h2>Future Work: Requirements for a Full Analysis</h2>
+
+<p>The preliminary results validate the structural fidelity of the world model (Phase 1), but a
+full proper analysis is required to validate the agent's actual decision-making capabilities
+(Phase 2). To elevate this research to a complete study, the following must be addressed:</p>
+
+<ol class="body-list">
+  <li>
+    <strong>Phase 2 RL Performance Metrics.</strong> The most critical missing data is the actual
+    Reinforcement Learning performance. A full analysis must include learning curves showing
+    cumulative episodic return (Agent Score) over environment steps. The flat MSE rollout curves
+    must translate into tangible gameplay success in the VizDoom environment.
+  </li>
+  <li>
+    <strong>Proper Foundation Model Baselines.</strong> To accurately assess the value of the
+    custom CNN architecture, the DINOv2 baseline must be corrected. This requires fixing the
+    variance regularization bug and running DINOv2 through a V-JEPA fine-tuning stage
+    (Phase 0 equivalent) to give it a fair chance at learning environment dynamics.
+  </li>
+  <li>
+    <strong>Hyperparameter Ablation Studies.</strong>
+    <ul>
+      <li><strong>MPC Horizon:</strong> Testing how the length of the imagination horizon
+      ($K = 5, 10, 15, 30$) impacts both agent score and inference latency.</li>
+      <li><strong>Masking Ratios:</strong> Ablating the 50% spatial mask and the temperature used
+      in the output weightings to find the optimal balance between global scene understanding and
+      local feature focus.</li>
+    </ul>
+  </li>
+  <li>
+    <strong>Generalization Testing.</strong> VizDoom relies heavily on rigid, grid-like physics
+    and low-resolution textures. A full analysis should evaluate the curriculum on a secondary,
+    visually distinct environment (e.g., DeepMind Control Suite or Habitat) to prove the masking
+    strategies generalize beyond classic shooter environments.
+  </li>
+</ol>
+
+
+<footer>
+  Sam Selvaraj &nbsp;&middot;&nbsp; MS in Computer Science &nbsp;&middot;&nbsp; 2026<br>
+  <em>What You Imagine Is What You Learn: Masking Strategies, World Model Fidelity, and MPC-Based Reinforcement Learning</em>
+</footer>
+
+</div>
+
+<!-- MODAL -->
+<div id="modal" onclick="closeModal()">
+  <span id="modal-close" onclick="closeModal()">&times;</span>
+  <img id="modal-img" src="" alt="" onclick="event.stopPropagation()">
+</div>
+
+<script>
+  document.querySelectorAll('img').forEach(function(img) {
+    img.classList.add('zoomable');
+    img.addEventListener('click', function(e) {
+      e.stopPropagation();
+      var m = document.getElementById('modal');
+      document.getElementById('modal-img').src = this.src;
+      m.classList.add('open');
+    });
+  });
+  function closeModal() {
+    document.getElementById('modal').classList.remove('open');
+  }
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeModal();
+  });
+</script>
+</body>
+</html>

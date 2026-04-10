@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>What You Imagine Is What You Learn</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌍</text></svg>">
 <script>
   window.MathJax = {
     tex: { inlineMath: [['$','$']], displayMath: [['$$','$$']] },
@@ -730,41 +731,72 @@ we tested the models in a 20-step imagination rollout, measuring the predictive 
 
 <h3>Qualitative Visualization of Latent Imagination</h3>
 
-<p>The qualitative visualizations of the world model's internal rollouts perfectly corroborate the
-quantitative MSE data. When visualizing the spatial token grids, our custom Phase 0 pretrained
-CNNs (utilizing both Error-Based and Motion-Weighted masking) demonstrate remarkably stable
-"dreams." The imagined latent states track the real environmental latents with high visual fidelity
-across the rollout horizon, preserving the structural integrity of the scene and proving the RSSM
-prior has successfully internalized the environment's physics. Conversely, the DINOv2 baseline,
-lacking Phase 0 temporal grounding, exhibits severe visual divergence. Its imagined latents rapidly
-decouple from reality, demonstrating how an ungrounded foundation model's prior collapses when
-forced to unroll sequences without intermediate real observations. Ultimately, these visual
-comparisons validate our core thesis: domain-specific visual-temporal pretraining is not just
-beneficial, but strictly mandatory to produce a world model capable of the coherent, long-horizon
-imagination required for MPC-based reinforcement learning.</p>
+<p>To visually inspect what the world model is actually learning, we use a lightweight decoder to
+project the latent token grids back into pixel space. Each frame in the visualization shows four
+panels: the real observation on the top left, the decoded dream on the top right, and the
+corresponding latent heatmaps below. The decoder is purely a diagnostic tool and is not part of
+the training pipeline. It lets us roughly see what the RSSM is imagining at each rollout step,
+though it is worth noting that the decoded image is an approximation. Two latent states can look
+similar in pixel space but encode very different structure for planning purposes, so these visuals
+should be read alongside the MSE numbers rather than instead of them.</p>
+
+<p>At the start of the rollout, all three models look nearly identical. The RSSM is initialized
+from a real observation, so the latent hot spots line up well and the decoded scene is close to
+reality across the board. The differences start showing up around the midpoint and get clearer
+toward the end.</p>
+
+<p>The Error-Based model holds together the longest. By the final frames the decoded dream has
+lost wall texture detail and the scene is blurry, but the enemy is still visible as a rough shape
+near the center, and the latent grid retains a recognizable structure. The spatial layout of the
+corridor is still there.</p>
+
+<p>The Motion-Weighted model degrades at a similar rate for the static geometry, but handles the
+enemy differently. By the end it has completely dropped the enemy from the dream, which is
+consistent with the masking blindspot: if the enemy was not moving much during that rollout
+segment, motion-weighted masking would have given those patches near-zero weight during training,
+so the model never learned to maintain them under imagination. There is also a small hallucination
+visible in the late frames, a bright flicker near the gun barrel that does not correspond to
+anything in the real observation. This suggests the RSSM, without a strong motion signal to anchor
+it, started generating plausible-looking dynamics rather than tracking real ones.</p>
+
+<p>The DINOv2 model retains the gross room geometry throughout, the walls and floor are still
+recognizable, but the latent grid diverges from the real one noticeably earlier than either CNN.
+By the final frames the color distribution is substantially wrong and the latent hot spots have
+shifted to positions that do not correspond to anything salient in the scene. The enemy is absent
+from the dream for most of the rollout. This is a direct consequence of having no Phase 0
+grounding: the RSSM never learned to track objects through time in this environment, so under pure
+imagination it defaults to a plausible but generic room structure.</p>
+
+<p>All three models produce blurry dreams by the end of an 80-frame rollout. None of them are
+pixel-accurate. The meaningful question for MPC is not whether the dream looks photorealistic, but
+whether the latent structure is accurate enough for the reward predictor and value function to make
+good planning decisions. The CNN models, particularly the error-based one, hold that structure
+longer.</p>
 
 <div class="gif-grid">
   <figure>
     <img src="assets/world_model_validation_cnn_error.gif" alt="CNN Error-Based world model validation">
     <figcaption>
       <strong>CNN: Error-Based masking.</strong><br>
-      Stable long-horizon imagination. Imagined latents track real environmental latents with high
-      visual fidelity.
+      Loses texture detail over time but retains spatial layout and keeps the enemy roughly in
+      frame through the end of the rollout.
     </figcaption>
   </figure>
   <figure>
     <img src="assets/world_model_validation_cnn_motion.gif" alt="CNN Motion-Weighted world model validation">
     <figcaption>
       <strong>CNN: Motion-Weighted masking.</strong><br>
-      Comparable stability. RSSM prior has successfully internalized the environment's physics.
+      Similar degradation pattern to error-based, but drops the enemy earlier and shows a small
+      hallucination near the gun in late frames, consistent with the motion blindspot.
     </figcaption>
   </figure>
   <figure>
     <img src="assets/world_model_validation_dino_error_weighted_latest.gif" alt="DINOv2 world model validation">
     <figcaption>
       <strong>DINOv2 (no Phase 0).</strong><br>
-      Severe visual divergence. Imagined latents rapidly decouple from reality without temporal
-      grounding.
+      Retains the gross room geometry but the latent grid diverges from reality earlier than either
+      CNN. Enemy is absent for most of the rollout and the latent hot spots shift to positions that
+      do not correspond to anything in the scene.
     </figcaption>
   </figure>
 </div>

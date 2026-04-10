@@ -491,8 +491,8 @@ Model Predictive Control (MPC) to reason over imagined futures at every step.</p
     projection head, RSSM, and JEPA Predictor) is trained jointly.</p>
     <p><strong>RSSM Belief State.</strong> The RSSM maintains a two-part belief at every timestep.
     The deterministic component $h_t \in \mathbb{R}^{512}$ is produced by a BlockGRU with LayerNorm
-    applied to the hidden state output for gradient stability:
-    $h_t = \mathrm{LayerNorm}(\mathrm{GRU}(h_{t-1}, [z_{t-1};\, \phi_a(a_{t-1})]))$.</p>
+    applied to the hidden state output for gradient stability:</p>
+    <div class="eq">$$h_t = \mathrm{LayerNorm}(\mathrm{GRU}(h_{t-1}, [z_{t-1};\, \phi_a(a_{t-1})]))$$</div>
     <p>The stochastic component $z_t$ is sampled from 32 independent categorical distributions
     each with 32 classes, yielding a 1024-dimensional flattened one-hot vector. To prevent
     categorical collapse, a 1% uniform mixing (unimix) is applied:

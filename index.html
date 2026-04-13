@@ -458,7 +458,7 @@ Model Predictive Control (MPC) to reason over imagined futures at every step.</p
     <p>Computes per-patch importance weights from inter-frame token differences,
     EMA-smoothed with decay $\alpha = 0.7$:</p>
     <div class="eq">
-      $$w_t^{(n)} = \mathrm{softmax}\!\left(\frac{\mathrm{EMA}\!\left(\bigl|e_t^{(n)}-e_{t-1}^{(n)}\bigr|^2\right)}{\tau}\right)$$
+      $$w_t^{(n)} = \mathrm{softmax}_n\!\left(\frac{\mathrm{EMA}\!\left(\bigl\|e_t^{(n)}-e_{t-1}^{(n)}\bigr\|^2\right)}{\tau}\right)$$
     </div>
     <p>This forces the encoder to model moving entities but renders it blind to stationary threats.</p>
     <div class="blindspot">A motionless monster might receive a weight of zero.</div>
@@ -468,7 +468,7 @@ Model Predictive Control (MPC) to reason over imagined futures at every step.</p
     <p>Replaces motion signals with the predictor's own detached per-patch MSE from the previous
     training step:</p>
     <div class="eq">
-      $$w_t^{(n)} = \mathrm{softmax}\!\left(\frac{\mathrm{MSE}_{t-1}^{(n)}}{\tau}\right)$$
+      $$w_t^{(n)} = \mathrm{softmax}_n\!\left(\frac{\mathrm{MSE}_{t-1}^{(n)}}{\tau}\right)$$
     </div>
     <p>Structurally complex objects such as a stationary monster are inherently harder to predict
     than flat walls and naturally generate high error, forcing the encoder to dedicate capacity to
@@ -518,7 +518,7 @@ Model Predictive Control (MPC) to reason over imagined futures at every step.</p
   <li>The <strong>single-step JEPA loss</strong> measures weighted MSE between the JEPA Predictor's
   output and the EMA target encoder tokens (stop-gradient) at the next timestep:
   $$\mathcal{L}_\mathrm{JEPA} = \frac{1}{T-1}\sum_{t=1}^{T-1}\sum_{n=1}^{N}
-    w_t^{(n)}\cdot\bigl|\hat{e}_{t+1}^{(n)} - e_{t+1}^{(n)}\bigr|^2$$
+    w_t^{(n)}\cdot\bigl\|\hat{e}_{t+1}^{(n)} - e_{t+1}^{(n)}\bigr\|^2$$
   </li>
   <li>The <strong>multi-step imagination loss</strong> unrolls the RSSM $K=12$ steps forward using
   only its prior, enforcing coherence over the full planning horizon used in Phase 2:
@@ -530,7 +530,7 @@ Model Predictive Control (MPC) to reason over imagined futures at every step.</p
 allowing the RSSM to first learn to encode observations before being pressured to develop a
 predictive prior. Patch importance weights are annealed from 50% to 80% weighted sampling over
 10,000 steps. Gradients are truncated every 8 steps (TBPTT) to bound VRAM usage. A variance
-regularization term $\mathcal{L}_\mathrm{var} = \mathbb{E}[\mathrm{ReLU}(1 - \sigma(N_\mathrm{ctx}))]$
+regularization term $\mathcal{L}_\mathrm{var} = \mathbb{E}_\mathcal{B}[\mathrm{ReLU}(1 - \mathrm{std}(\{e^{(n)}\}_{n=1}^{N}))]$
 prevents the CNN encoder from collapsing all $N$ spatial tokens to a single vector.</p>
 
 
